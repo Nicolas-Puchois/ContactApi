@@ -1,9 +1,11 @@
-﻿namespace ContactApi.Entities
+﻿using MySql.Data.Types;
+using System.ComponentModel.DataAnnotations;
+
+namespace ContactApi.Entities
 {
 	public class Contact
 	{
-
-		public int Id { get; set; }
+		[Key]public int Id { get; set; }
 		public string Nom { get; set; }
 		public string Prenom { get; set; }
 		public string Nom_Complet { get; set; }
