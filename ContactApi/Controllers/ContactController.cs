@@ -1,5 +1,6 @@
 ﻿using ContactApi.Data;
 using ContactApi.Entities;
+using ContactApi.Service.ContactService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,57 +12,49 @@ namespace ContactApi.Controllers
 	public class ContactController : ControllerBase
 	{
 		private readonly DataContext _context;
+		private readonly IContactService _contactService;
 
-		public ContactController(DataContext context)
+		public ContactController(DataContext context,IContactService contactService)
 		{
 			_context = context;
+			_contactService = contactService;
 		}
 
-		[HttpGet]
-		public async Task<IActionResult> AvoirToutLesContacts()
+
+		[HttpGet(Name ="RécupérerToutLesContacts")]
+		public async Task<ActionResult<List<Contact>>>? AvoirToutLesContacts()
 		{
-			var contacts = await _context.Contact.ToListAsync();
-			return Ok(contacts);
+			return await  _contactService.AvoirToutLesContacts();
 		}
 
-		[HttpGet("{id}")]
-		public async Task<IActionResult> ContactParId(int id)
+		[HttpGet("{Id}")]
+		public async Task<ActionResult<Contact>>? ContactParId(int Id)
 		{
-			var contactsParId = await _context.Contact.FindAsync(id);
-			return Ok(contactsParId);
+			return await _contactService.ContactParId(Id);
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> AjoutContact([FromBody] Contact ajoutContact)
+		public async Task<ActionResult<List<Contact>>>? AjoutContact([FromBody] Contact ajoutContact)
 		{
-			_context.Contact.Add(ajoutContact);
-			await _context.SaveChangesAsync();
-			return Ok(await AvoirToutLesContacts());
+			return await _contactService.AjoutContact(ajoutContact);
 		}
 
 		[HttpPut]
-		public async Task<IActionResult> ModifierContact(Contact modifierUnContact)
+		public async Task<ActionResult<List<Contact>>>? ModifierContact(Contact modifierUnContact, int Id)
 		{
-			var dbContact = await _context.Contact.FindAsync(modifierUnContact.Id);
-			
-			dbContact.Nom = modifierUnContact.Nom;
-			dbContact.Prenom = modifierUnContact.Prenom;
-			dbContact.Nom_Complet = modifierUnContact.Nom_Complet;
-			dbContact.Sexe = modifierUnContact.Sexe;
-			dbContact.Date_Naissance = modifierUnContact.Date_Naissance;
-			dbContact.Avatar = modifierUnContact.Avatar;
-
-			await _context.SaveChangesAsync();
-			return Ok(modifierUnContact);
+			return await _contactService.ModifierContact(modifierUnContact, Id);
 		}
 
 		[HttpDelete]
-		public async Task<IActionResult> SupprimerUnContact(int Id)
+		public async Task<ActionResult<List<Contact>>>? SupprimerUnContact(int Id)
 		{
-			var supprimerEntrer = await _context.Contact.FindAsync(Id);
-			_context.Contact.Remove(supprimerEntrer);
-			await _context.SaveChangesAsync(); 
-			return Ok(await _context.Contact.ToListAsync());
+			return await _contactService.SupprimerUnContact(Id);
+		}
+
+		[HttpPatch]
+		public async Task<ActionResult<List<Contact>>>? ModifierLePrenomDuContact(Contact modifierUnNomDeContact, int Id)
+		{
+			return await _contactService.ModifierLePrenomDuContact(modifierUnNomDeContact,Id);
 		}
 	}
 }
