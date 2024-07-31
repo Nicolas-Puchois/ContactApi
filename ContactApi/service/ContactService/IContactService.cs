@@ -13,5 +13,9 @@ namespace ContactApi.Service.ContactService
 		public Task<ActionResult<List<Contact>>>? ModifierContact(Contact modifierUnContact, int Id);
 		public Task<ActionResult<List<Contact>>>? SupprimerUnContact(int Id);
 		public Task<ActionResult<List<Contact>>>? ModifierLePrenomDuContact(Contact modifierUnNomDeContact, int Id);
+
+		public Task<ActionResult<Contact>>? ContactParNom(string nom);
+
+		public Task<ActionResult<Contact>>? ContactParPrenom(string prenomCommencantPar);
 	}
 }

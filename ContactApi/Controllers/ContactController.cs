@@ -33,6 +33,18 @@ namespace ContactApi.Controllers
 			return await _contactService.ContactParId(Id);
 		}
 
+		[HttpGet("{nom}")]
+		public async Task<ActionResult<Contact>>? ContactParNom(string nom)
+		{
+			return await _contactService.ContactParNom(nom);
+		}
+
+		[HttpGet("{prenomCommencantPar}")]
+		public async Task<ActionResult<Contact>>? ContactParPrenom(string prenomCommencantPar)
+		{
+			return await _contactService.ContactParPrenom(prenomCommencantPar);
+		}
+
 		[HttpPost]
 		public async Task<ActionResult<List<Contact>>>? AjoutContact([FromBody] Contact ajoutContact)
 		{

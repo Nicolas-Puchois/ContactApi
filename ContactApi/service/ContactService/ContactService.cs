@@ -28,7 +28,25 @@ namespace ContactApi.Service.ContactService
 					}
 			return contactsParId;
 		}
+		public async Task<ActionResult<Contact>>? ContactParNom(string nom)
+		{
+			var contactsParNom = await _context.Contact.FindAsync(nom);
+			if (contactsParNom == null)
+			{
+				return null;
+			}
+			return contactsParNom;
+		}
 
+		public async Task<ActionResult<Contact>>? ContactParPrenom(string prenomCommencantPar)
+		{
+			var contactsParPrenom = await _context.Contact.FindAsync("Like " + "%" + prenomCommencantPar + "");
+			if (contactsParPrenom == null)
+			{
+				return null;
+			}
+			return contactsParPrenom;
+		}
 		public async Task<ActionResult<List<Contact>>>? AjoutContact([FromBody] Contact ajoutContact)
 		{
 			_context.Contact.Add(ajoutContact);
@@ -80,5 +98,7 @@ namespace ContactApi.Service.ContactService
 			await _context.SaveChangesAsync();
 			return await _context.Contact.ToListAsync();
 		}
+
+
 	}
 }
